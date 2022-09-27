@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "minecraft_legends",
+  "version": "${version}",
+
+  "name": "Minecraft Legends Mod",
+  "description": "This is a fabric mod to add some mobs, structures, blocks and items from Minecraft Legends to Minecraft!",
+  "authors": [
+    "Rupyber Studios",
+    "Pyrix25633",
+    "Ruken"
+  ],
+  "contributors": [
+    "vityayoutuber",
+    "TgwCreeper"
+  ],
+  "contact": {
+    "homepage": "https://rupyberstudios.github.io/website/",
+    "sources": "https://github.com/Pyrix25633/Fabric-MinecraftLegends",
+    "issues": "https://github.com/Pyrix25633/Fabric-MinecraftLegends/issues"
+  },
+  "license": "GPL-3.0",
+  "icon": "assets/minecraft_legends/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.rupyber_studios.minecraft_legends.MinecraftLegends"
+    ],
+    "client": [
+      "net.rupyber_studios.minecraft_legends.MinecraftLegendsClient"
+    ]
+  },
+  "custom": {
+    "modupdater": {
+      "strategy": "curseforge",
+      "projectID": "",
+      "strict": false
+    },
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/AgPTkkQveF"
+      }
+    }
+  },
+  "mixins": [
+    "minecraft_legends.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "fabric-api": "*",
+    "minecraft": "1.19.2",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
