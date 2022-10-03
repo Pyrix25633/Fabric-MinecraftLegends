@@ -16,7 +16,7 @@ public class QuiverModel extends AnimatedGeoModel<QuiverEntity> {
 
     @Override
     public Identifier getTextureResource(QuiverEntity object) {
-        return new Identifier(MinecraftLegends.MOD_ID, "textures/entity/quiver.png");
+        return object.getTextureResource();
     }
 
     @Override

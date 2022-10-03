@@ -35,6 +35,28 @@
 					}
 				}
 			}
+		},
+		"animation.quiver.idle": {
+			"loop": true,
+			"animation_length": 1.5,
+			"bones": {
+				"body": {
+					"rotation": [0, 0, 0],
+					"position": [0, 0, 0],
+					"scale": {
+						"0.0": [1, 1, 1],
+						"0.75": [1.03, 1.03, 1.03],
+						"1.5": [1, 1, 1]
+					}
+				},
+				"cannon": {
+					"scale": {
+						"0.0": [1, 1, 1],
+						"0.75": [1.08, 1.08, 1.08],
+						"1.5": [1, 1, 1]
+					}
+				}
+			}
 		}
 	},
 	"geckolib_format_version": 2
