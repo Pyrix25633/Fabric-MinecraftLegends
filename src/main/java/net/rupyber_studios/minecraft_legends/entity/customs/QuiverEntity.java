@@ -18,7 +18,6 @@ import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.rupyber_studios.minecraft_legends.MinecraftLegends;
-import net.rupyber_studios.minecraft_legends.entity.ai.QuiverBowAttackGoal;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -32,9 +31,8 @@ import java.util.UUID;
 
 public class QuiverEntity extends GolemEntity implements Angerable, IAnimatable {
     private AnimationFactory factory = new AnimationFactory(this);
-    private static final UniformIntProvider ANGER_TIME_RANGE;
-    private final QuiverBowAttackGoal bowAttackGoal = new QuiverBowAttackGoal(this, 1.0, 20, 15.0F);
     private final int arrows;
+    private static final UniformIntProvider ANGER_TIME_RANGE;
     private int angerTime;
     @Nullable
     private UUID angryAt;
@@ -59,8 +57,8 @@ public class QuiverEntity extends GolemEntity implements Angerable, IAnimatable 
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(8, new LookAroundGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this, new Class[0]));
-        this.targetSelector.add(3, new ActiveTargetGoal(this, MobEntity.class, 5, false, false, (entity) -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
-        this.targetSelector.add(4, new UniversalAngerGoal(this, false));
+        this.targetSelector.add(3, new ActiveTargetGoal<>(this, MobEntity.class, 5, false, false, (entity) -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
+        this.targetSelector.add(4, new UniversalAngerGoal<>(this, false));
     }
 
     public static DefaultAttributeContainer.Builder setAttributes() {
@@ -116,32 +114,6 @@ public class QuiverEntity extends GolemEntity implements Angerable, IAnimatable 
     }
 
     @Override
-    public int getAngerTime() {
-        return angerTime;
-    }
-
-    @Override
-    public void setAngerTime(int angerTime) {
-        this.angerTime = angerTime;
-    }
-
-    @Nullable
-    @Override
-    public UUID getAngryAt() {
-        return angryAt;
-    }
-
-    @Override
-    public void setAngryAt(@Nullable UUID angryAt) {
-        this.angryAt = angryAt;
-    }
-
-    @Override
-    public void chooseRandomAngerTime() {
-        this.setAngerTime(ANGER_TIME_RANGE.get(this.random));
-    }
-
-    @Override
     protected SoundEvent getAmbientSound() {
         return SoundEvents.BLOCK_BAMBOO_BREAK;
     }
@@ -154,6 +126,27 @@ public class QuiverEntity extends GolemEntity implements Angerable, IAnimatable 
     @Override
     protected SoundEvent getDeathSound() {
         return SoundEvents.BLOCK_BAMBOO_HIT;
+    }
+
+    public void chooseRandomAngerTime() {
+        this.setAngerTime(ANGER_TIME_RANGE.get(this.random));
+    }
+
+    public void setAngerTime(int angerTime) {
+        this.angerTime = angerTime;
+    }
+
+    public int getAngerTime() {
+        return this.angerTime;
+    }
+
+    public void setAngryAt(@Nullable UUID angryAt) {
+        this.angryAt = angryAt;
+    }
+
+    @Nullable
+    public UUID getAngryAt() {
+        return this.angryAt;
     }
 
     static {
