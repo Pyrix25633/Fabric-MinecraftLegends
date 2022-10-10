@@ -7,15 +7,22 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TimeHelper;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.rupyber_studios.minecraft_legends.MinecraftLegends;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +38,7 @@ import java.util.UUID;
 
 public class QuiverEntity extends GolemEntity implements Angerable, IAnimatable {
     private AnimationFactory factory = new AnimationFactory(this);
-    private final int arrows;
+    private static final TrackedData<Integer> ARROWS = DataTracker.registerData(QuiverEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final UniformIntProvider ANGER_TIME_RANGE;
     private int angerTime;
     @Nullable
@@ -45,7 +52,13 @@ public class QuiverEntity extends GolemEntity implements Angerable, IAnimatable 
     public QuiverEntity(EntityType<? extends GolemEntity> entityType, World world) {
         super(entityType, world);
         this.stepHeight = 1.0F;
-        arrows = Random.create().nextBetween(0, 64);
+        setArrows(0);
+    }
+
+    @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(ARROWS, 64);
     }
 
     @Override
@@ -76,8 +89,45 @@ public class QuiverEntity extends GolemEntity implements Angerable, IAnimatable 
         return PlayState.CONTINUE;
     }
 
+    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
+        ItemStack itemStack = player.getStackInHand(hand);
+        if (!itemStack.isOf(Items.ARROW)) {
+            return ActionResult.PASS;
+        } else {
+            int a = getArrows();
+            if(a < 64) {
+                float g = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
+                SoundEvent sound = switch(Arrows.from(a)) {
+                    case EMPTY, LOW -> SoundEvents.ITEM_CROSSBOW_LOADING_START;
+                    case MEDIUM, HIGH -> SoundEvents.ITEM_CROSSBOW_LOADING_MIDDLE;
+                    case FULL -> SoundEvents.ITEM_CROSSBOW_LOADING_END;
+                };
+                this.playSound(SoundEvents.ITEM_CROSSBOW_LOADING_START, 1.0F, g);
+                if (!player.getAbilities().creativeMode) {
+                    itemStack.decrement(1);
+                }
+                setArrows(a + 1);
+                return ActionResult.success(this.world.isClient);
+            } else {
+                return ActionResult.PASS;
+            }
+        }
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putInt("arrows", getArrows());
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        setArrows(nbt.getInt("arrows"));
+    }
+
     public Identifier getTextureResource() {
-        Arrows arrows = Arrows.from(this.arrows);
+        Arrows arrows = Arrows.from(this.getArrows());
         switch(arrows) {
             case EMPTY -> {
                 return ARROWS_EMPTY;
@@ -106,6 +156,14 @@ public class QuiverEntity extends GolemEntity implements Angerable, IAnimatable 
     @Override
     public AnimationFactory getFactory() {
         return factory;
+    }
+
+    public int getArrows() {
+        return this.dataTracker.get(ARROWS);
+    }
+
+    public void setArrows(int arrows) {
+        this.dataTracker.set(ARROWS, arrows);
     }
 
     @Override
@@ -154,14 +212,11 @@ public class QuiverEntity extends GolemEntity implements Angerable, IAnimatable 
     }
 
     public enum Arrows {
-        EMPTY(0),
-        LOW(1),
-        MEDIUM(2),
-        HIGH(3),
-        FULL(4);
-
-        Arrows(int arrows) {
-        }
+        EMPTY,
+        LOW,
+        MEDIUM,
+        HIGH,
+        FULL;
 
         public static Arrows from(int arrowQuantity) {
             if(arrowQuantity == 0) return EMPTY;
