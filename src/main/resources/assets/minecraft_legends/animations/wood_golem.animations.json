@@ -1,7 +1,7 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.quiver.walk": {
+		"animation.wood_golem.walk": {
 			"loop": true,
 			"animation_length": 0.625,
 			"bones": {
@@ -36,7 +36,7 @@
 				}
 			}
 		},
-		"animation.quiver.idle": {
+		"animation.wood_golem.idle": {
 			"loop": true,
 			"animation_length": 1.5,
 			"bones": {

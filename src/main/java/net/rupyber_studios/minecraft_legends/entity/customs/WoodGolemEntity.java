@@ -36,20 +36,20 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.UUID;
 
-public class QuiverEntity extends GolemEntity implements Angerable, IAnimatable {
+public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatable {
     private AnimationFactory factory = new AnimationFactory(this);
-    private static final TrackedData<Integer> ARROWS = DataTracker.registerData(QuiverEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> ARROWS = DataTracker.registerData(WoodGolemEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final UniformIntProvider ANGER_TIME_RANGE;
     private int angerTime;
     @Nullable
     private UUID angryAt;
-    private static final Identifier ARROWS_EMPTY = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/quiver.png");
-    private static final Identifier ARROWS_1 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/quiver_arrows_1.png");
-    private static final Identifier ARROWS_2 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/quiver_arrows_2.png");
-    private static final Identifier ARROWS_3 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/quiver_arrows_3.png");
-    private static final Identifier ARROWS_FULL = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/quiver_arrows_full.png");
+    private static final Identifier ARROWS_EMPTY = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/wood_golem.png");
+    private static final Identifier ARROWS_1 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/wood_golem_arrows_1.png");
+    private static final Identifier ARROWS_2 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/wood_golem_arrows_2.png");
+    private static final Identifier ARROWS_3 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/wood_golem_arrows_3.png");
+    private static final Identifier ARROWS_FULL = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/wood_golem_arrows_full.png");
 
-    public QuiverEntity(EntityType<? extends GolemEntity> entityType, World world) {
+    public WoodGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
         super(entityType, world);
         this.stepHeight = 1.0F;
         setArrows(0);
@@ -82,10 +82,10 @@ public class QuiverEntity extends GolemEntity implements Angerable, IAnimatable 
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if(event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.quiver.walk"));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.wood_golem.walk"));
             return PlayState.CONTINUE;
         }
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.quiver.idle"));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.wood_golem.idle"));
         return PlayState.CONTINUE;
     }
 

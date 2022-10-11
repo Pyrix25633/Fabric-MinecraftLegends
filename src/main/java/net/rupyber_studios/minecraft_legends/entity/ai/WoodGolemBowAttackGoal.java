@@ -4,15 +4,13 @@ import java.util.EnumSet;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.Goal.Control;
-import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.BowItem;
 import net.minecraft.item.Items;
-import net.rupyber_studios.minecraft_legends.entity.customs.QuiverEntity;
+import net.rupyber_studios.minecraft_legends.entity.customs.WoodGolemEntity;
 
-public class QuiverBowAttackGoal extends Goal {
-    private final QuiverEntity actor;
+public class WoodGolemBowAttackGoal extends Goal {
+    private final WoodGolemEntity actor;
     private final double speed;
     private int attackInterval;
     private final float squaredRange;
@@ -22,7 +20,7 @@ public class QuiverBowAttackGoal extends Goal {
     private boolean backward;
     private int combatTicks = -1;
 
-    public QuiverBowAttackGoal(QuiverEntity actor, double speed, int attackInterval, float range) {
+    public WoodGolemBowAttackGoal(WoodGolemEntity actor, double speed, int attackInterval, float range) {
         this.actor = actor;
         this.speed = speed;
         this.attackInterval = attackInterval;

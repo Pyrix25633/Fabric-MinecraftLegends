@@ -9,8 +9,8 @@ import net.rupyber_studios.minecraft_legends.MinecraftLegends;
 import net.rupyber_studios.minecraft_legends.entity.ModEntities;
 
 public class ModItems {
-    public static final Item QUIVER_SPAWN_EGG = registerItem("quiver_spawn_egg",
-            new SpawnEggItem(ModEntities.QUIVER, 0x5E4627, 0x5E4627,
+    public static final Item WOOD_GOLEM_SPAWN_EGG = registerItem("wood_golem_spawn_egg",
+            new SpawnEggItem(ModEntities.WOOD_GOLEM, 0x5E4627, 0x5E4627,
                     new FabricItemSettings().group(ModItemGroup.MINECRAFT_LEGENDS).maxCount(1)));
 
     private static Item registerItem(String name, Item item) {
