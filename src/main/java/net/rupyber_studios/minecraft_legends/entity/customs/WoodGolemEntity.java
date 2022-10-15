@@ -3,6 +3,8 @@ package net.rupyber_studios.minecraft_legends.entity.customs;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -13,6 +15,8 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -25,6 +29,7 @@ import net.minecraft.util.TimeHelper;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.World;
 import net.rupyber_studios.minecraft_legends.MinecraftLegends;
+import net.rupyber_studios.minecraft_legends.entity.ai.WoodGolemBowAttackGoal;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -36,7 +41,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.UUID;
 
-public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatable {
+public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatable, RangedAttackMob {
     private AnimationFactory factory = new AnimationFactory(this);
     private static final TrackedData<Integer> ARROWS = DataTracker.registerData(WoodGolemEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final UniformIntProvider ANGER_TIME_RANGE;
@@ -66,7 +71,7 @@ public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatab
         this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.9, 32.0F));
         this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.6, false));
         this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.6));
-        //this.goalSelector.add(4, bowAttackGoal);
+        this.goalSelector.add(4, new WoodGolemBowAttackGoal(this, 1.0, 20, 15.0F));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(8, new LookAroundGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this, new Class[0]));
@@ -166,6 +171,8 @@ public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatab
         this.dataTracker.set(ARROWS, arrows);
     }
 
+    public void decrementArrows() {this.dataTracker.set(ARROWS, this.dataTracker.get(ARROWS) - 1);}
+
     @Override
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
         return 0.7F;
@@ -209,6 +216,24 @@ public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatab
 
     static {
         ANGER_TIME_RANGE = TimeHelper.betweenSeconds(20, 39);
+    }
+
+    @Override
+    public void attack(LivingEntity target, float pullProgress) {
+        ItemStack itemStack = new ItemStack(Items.ARROW, 1);
+        PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress);
+        double d = target.getX() - this.getX();
+        double e = target.getBodyY(0.3333333333333333) - persistentProjectileEntity.getY();
+        double f = target.getZ() - this.getZ();
+        double g = Math.sqrt(d * d + f * f);
+        persistentProjectileEntity.setVelocity(d, e + g * 0.20000000298023224, f, 1.6F, (float)(14 - this.world.getDifficulty().getId() * 4));
+        this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+        this.world.spawnEntity(persistentProjectileEntity);
+        this.decrementArrows();
+    }
+
+    protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier) {
+        return ProjectileUtil.createArrowProjectile(this, arrow, damageModifier);
     }
 
     public enum Arrows {

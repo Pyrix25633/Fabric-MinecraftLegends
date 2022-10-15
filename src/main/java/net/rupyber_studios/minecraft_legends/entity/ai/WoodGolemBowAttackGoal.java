@@ -33,15 +33,11 @@ public class WoodGolemBowAttackGoal extends Goal {
     }
 
     public boolean canStart() {
-        return this.actor.getTarget() == null ? false : this.isHoldingBow();
-    }
-
-    protected boolean isHoldingBow() {
-        return this.actor.isHolding(Items.BOW);
+        return this.actor.getTarget() != null;
     }
 
     public boolean shouldContinue() {
-        return (this.canStart() || !this.actor.getNavigation().isIdle()) && this.isHoldingBow();
+        return this.canStart() || !this.actor.getNavigation().isIdle();
     }
 
     public void start() {
@@ -63,21 +59,16 @@ public class WoodGolemBowAttackGoal extends Goal {
 
     public void tick() {
         LivingEntity livingEntity = this.actor.getTarget();
-        if (livingEntity != null) {
+        if(livingEntity != null) {
             double d = this.actor.squaredDistanceTo(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
             boolean bl = this.actor.getVisibilityCache().canSee(livingEntity);
             boolean bl2 = this.targetSeeingTicker > 0;
-            if (bl != bl2) {
-                this.targetSeeingTicker = 0;
-            }
+            if(bl != bl2) this.targetSeeingTicker = 0;
 
-            if (bl) {
-                ++this.targetSeeingTicker;
-            } else {
-                --this.targetSeeingTicker;
-            }
+            if(bl) ++this.targetSeeingTicker;
+            else --this.targetSeeingTicker;
 
-            if (!(d > (double)this.squaredRange) && this.targetSeeingTicker >= 20) {
+            if(!(d > (double)this.squaredRange) && this.targetSeeingTicker >= 20) {
                 this.actor.getNavigation().stop();
                 ++this.combatTicks;
             } else {
@@ -85,46 +76,35 @@ public class WoodGolemBowAttackGoal extends Goal {
                 this.combatTicks = -1;
             }
 
-            if (this.combatTicks >= 20) {
-                if ((double)this.actor.getRandom().nextFloat() < 0.3) {
+            if(this.combatTicks >= 20) {
+                if((double)this.actor.getRandom().nextFloat() < 0.3) {
                     this.movingToLeft = !this.movingToLeft;
                 }
-
-                if ((double)this.actor.getRandom().nextFloat() < 0.3) {
+                if((double)this.actor.getRandom().nextFloat() < 0.3) {
                     this.backward = !this.backward;
                 }
 
                 this.combatTicks = 0;
             }
 
-            if (this.combatTicks > -1) {
-                if (d > (double)(this.squaredRange * 0.75F)) {
+            if(this.combatTicks > -1) {
+                if(d > (double)(this.squaredRange * 0.75F))
                     this.backward = false;
-                } else if (d < (double)(this.squaredRange * 0.25F)) {
+                else if (d < (double)(this.squaredRange * 0.25F))
                     this.backward = true;
-                }
 
                 this.actor.getMoveControl().strafeTo(this.backward ? -0.5F : 0.5F, this.movingToLeft ? 0.5F : -0.5F);
                 this.actor.lookAtEntity(livingEntity, 30.0F, 30.0F);
-            } else {
+            } else
                 this.actor.getLookControl().lookAt(livingEntity, 30.0F, 30.0F);
-            }
 
-            if (this.actor.isUsingItem()) {
-                if (!bl && this.targetSeeingTicker < -60) {
+            if(this.actor.getArrows() > 0) {
+                if (bl || this.targetSeeingTicker > -60) {
                     this.actor.clearActiveItem();
-                } else if (bl) {
-                    int i = this.actor.getItemUseTime();
-                    if (i >= 20) {
-                        this.actor.clearActiveItem();
-                        ((RangedAttackMob)this.actor).attack(livingEntity, BowItem.getPullProgress(i));
+                        this.actor.attack(livingEntity, 0);
                         this.cooldown = this.attackInterval;
-                    }
                 }
-            } else if (--this.cooldown <= 0 && this.targetSeeingTicker >= -60) {
-                this.actor.setCurrentHand(ProjectileUtil.getHandPossiblyHolding(this.actor, Items.BOW));
             }
-
         }
     }
 }
