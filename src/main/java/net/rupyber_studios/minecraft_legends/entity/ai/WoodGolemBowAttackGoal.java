@@ -2,34 +2,23 @@ package net.rupyber_studios.minecraft_legends.entity.ai;
 
 import java.util.EnumSet;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.BowItem;
-import net.minecraft.item.Items;
 import net.rupyber_studios.minecraft_legends.entity.customs.WoodGolemEntity;
 
 public class WoodGolemBowAttackGoal extends Goal {
     private final WoodGolemEntity actor;
     private final double speed;
-    private int attackInterval;
     private final float squaredRange;
-    private int cooldown = -1;
     private int targetSeeingTicker;
     private boolean movingToLeft;
     private boolean backward;
     private int combatTicks = -1;
 
-    public WoodGolemBowAttackGoal(WoodGolemEntity actor, double speed, int attackInterval, float range) {
+    public WoodGolemBowAttackGoal(WoodGolemEntity actor, double speed, float range) {
         this.actor = actor;
         this.speed = speed;
-        this.attackInterval = attackInterval;
         this.squaredRange = range * range;
         this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
-    }
-
-    public void setAttackInterval(int attackInterval) {
-        this.attackInterval = attackInterval;
     }
 
     public boolean canStart() {
@@ -49,7 +38,6 @@ public class WoodGolemBowAttackGoal extends Goal {
         super.stop();
         this.actor.setAttacking(false);
         this.targetSeeingTicker = 0;
-        this.cooldown = -1;
         this.actor.clearActiveItem();
     }
 
@@ -99,10 +87,15 @@ public class WoodGolemBowAttackGoal extends Goal {
                 this.actor.getLookControl().lookAt(livingEntity, 30.0F, 30.0F);
 
             if(this.actor.getArrows() > 0) {
-                if (bl || this.targetSeeingTicker > -60) {
-                    this.actor.clearActiveItem();
-                        this.actor.attack(livingEntity, 0);
-                        this.cooldown = this.attackInterval;
+                if(bl || this.targetSeeingTicker > -60) {
+                    if(this.actor.getPulling() > 10) {
+                        this.actor.attack(livingEntity, 20);
+                        this.actor.clearPulling();
+                    }
+                    else this.actor.incrementPulling();
+                }
+                else {
+                    this.actor.clearPulling();
                 }
             }
         }

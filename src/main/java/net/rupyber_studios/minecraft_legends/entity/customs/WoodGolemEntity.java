@@ -1,9 +1,6 @@
 package net.rupyber_studios.minecraft_legends.entity.customs;
 
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -17,6 +14,7 @@ import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -41,23 +39,26 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.UUID;
 
-public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatable, RangedAttackMob {
-    private AnimationFactory factory = new AnimationFactory(this);
+public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatable, RangedAttackMob, InventoryOwner {
     private static final TrackedData<Integer> ARROWS = DataTracker.registerData(WoodGolemEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final UniformIntProvider ANGER_TIME_RANGE;
-    private int angerTime;
-    @Nullable
-    private UUID angryAt;
     private static final Identifier ARROWS_EMPTY = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/wood_golem.png");
     private static final Identifier ARROWS_1 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/wood_golem_arrows_1.png");
     private static final Identifier ARROWS_2 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/wood_golem_arrows_2.png");
     private static final Identifier ARROWS_3 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/wood_golem_arrows_3.png");
     private static final Identifier ARROWS_FULL = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/wood_golem_arrows_full.png");
+    private final AnimationFactory factory = new AnimationFactory(this);
+    private int angerTime;
+    @Nullable
+    private UUID angryAt;
+    private int pulling;
+    private final SimpleInventory inventory = new SimpleInventory(1);
 
     public WoodGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
         super(entityType, world);
         this.stepHeight = 1.0F;
         setArrows(0);
+        this.setCanPickUpLoot(true);
     }
 
     @Override
@@ -71,10 +72,10 @@ public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatab
         this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.9, 32.0F));
         this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.6, false));
         this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.6));
-        this.goalSelector.add(4, new WoodGolemBowAttackGoal(this, 1.0, 20, 15.0F));
-        this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.add(4, new WoodGolemBowAttackGoal(this, 1.0, 16.5F));
+        this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.5F));
         this.goalSelector.add(8, new LookAroundGoal(this));
-        this.targetSelector.add(2, new RevengeGoal(this, new Class[0]));
+        this.targetSelector.add(2, new RevengeGoal(this));
         this.targetSelector.add(3, new ActiveTargetGoal<>(this, MobEntity.class, 5, false, false, (entity) -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
         this.targetSelector.add(4, new UniversalAngerGoal<>(this, false));
     }
@@ -96,9 +97,7 @@ public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatab
 
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack itemStack = player.getStackInHand(hand);
-        if (!itemStack.isOf(Items.ARROW)) {
-            return ActionResult.PASS;
-        } else {
+        if(itemStack.isOf(Items.ARROW)) {
             int a = getArrows();
             if(a < 64) {
                 float g = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
@@ -107,7 +106,7 @@ public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatab
                     case MEDIUM, HIGH -> SoundEvents.ITEM_CROSSBOW_LOADING_MIDDLE;
                     case FULL -> SoundEvents.ITEM_CROSSBOW_LOADING_END;
                 };
-                this.playSound(SoundEvents.ITEM_CROSSBOW_LOADING_START, 1.0F, g);
+                this.playSound(sound, 1.0F, g);
                 if (!player.getAbilities().creativeMode) {
                     itemStack.decrement(1);
                 }
@@ -117,6 +116,21 @@ public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatab
                 return ActionResult.PASS;
             }
         }
+        else if(itemStack.isOf(Items.OAK_PLANKS)) {
+            float f = this.getHealth();
+            this.heal(15.0F);
+            if(this.getHealth() == f) {
+                return ActionResult.PASS;
+            } else {
+                float g = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
+                this.playSound(SoundEvents.BLOCK_WOOD_PLACE, 1.0F, g);
+                if(!player.getAbilities().creativeMode) {
+                    itemStack.decrement(1);
+                }
+                return ActionResult.success(this.world.isClient);
+            }
+        }
+        else return ActionResult.PASS;
     }
 
     @Override
@@ -155,7 +169,7 @@ public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatab
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
+        animationData.addAnimationController(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
     @Override
@@ -171,7 +185,21 @@ public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatab
         this.dataTracker.set(ARROWS, arrows);
     }
 
-    public void decrementArrows() {this.dataTracker.set(ARROWS, this.dataTracker.get(ARROWS) - 1);}
+    public void decrementArrows() {
+        this.dataTracker.set(ARROWS, this.dataTracker.get(ARROWS) - 1);
+    }
+
+    public int getPulling() {
+        return pulling;
+    }
+
+    public void incrementPulling() {
+        pulling++;
+    }
+
+    public void clearPulling() {
+        pulling = 0;
+    }
 
     @Override
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
@@ -234,6 +262,26 @@ public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatab
 
     protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier) {
         return ProjectileUtil.createArrowProjectile(this, arrow, damageModifier);
+    }
+
+    @Override
+    public boolean canPickupItem(ItemStack stack) {
+        return stack.isOf(Items.ARROW) && this.getArrows() < 64;
+    }
+
+    @Override
+    public void sendPickup(Entity item, int count) {
+        int a = this.getArrows();
+        int missing = 64 - a;
+        super.sendPickup(item, Math.min(count, missing));
+        ItemStack stack = inventory.getStack(0);
+        this.setArrows(a + stack.getCount());
+        inventory.clear();
+    }
+
+    @Override
+    public SimpleInventory getInventory() {
+        return inventory;
     }
 
     public enum Arrows {
