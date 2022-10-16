@@ -70,6 +70,7 @@ public class PlankGolemEntity extends GolemEntity implements Angerable, IAnimata
 
     @Override
     protected void initGoals() {
+        this.goalSelector.add(1, new SwimGoal(this));
         this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.9, 32.0F));
         this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.6, false));
         this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.6));

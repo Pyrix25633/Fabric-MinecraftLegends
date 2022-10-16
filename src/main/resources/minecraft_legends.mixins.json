@@ -4,7 +4,16 @@
   "package": "net.rupyber_studios.minecraft_legends.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ZombieEntityMixin"
+    "MobEntityAccessor",
+    "ZombieEntityMixin",
+    "AbstractSkeletonEntityMixin",
+    "BlazeEntityMixin",
+    "SpiderEntityMixin",
+    "SlimeEntityMixin",
+    "VindicatorEntityMixin",
+    "PillagerEntityMixin",
+    "IllusionerEntityMixin",
+    "EvokerEntityMixin"
   ],
   "client": [
     "ExampleMixin"
