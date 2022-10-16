@@ -8,5 +8,5 @@ import net.rupyber_studios.minecraft_legends.MinecraftLegends;
 
 public class ModItemGroup {
     public static final ItemGroup MINECRAFT_LEGENDS = FabricItemGroupBuilder.build(new Identifier(MinecraftLegends.MOD_ID,
-            "minecraft_legends"), () -> new ItemStack(ModItems.WOOD_GOLEM_SPAWN_EGG));
+            "minecraft_legends"), () -> new ItemStack(ModItems.PLANK_GOLEM_SPAWN_EGG));
 }

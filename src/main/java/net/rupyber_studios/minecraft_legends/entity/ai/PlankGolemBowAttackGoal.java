@@ -3,10 +3,10 @@ package net.rupyber_studios.minecraft_legends.entity.ai;
 import java.util.EnumSet;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
-import net.rupyber_studios.minecraft_legends.entity.customs.WoodGolemEntity;
+import net.rupyber_studios.minecraft_legends.entity.customs.PlankGolemEntity;
 
-public class WoodGolemBowAttackGoal extends Goal {
-    private final WoodGolemEntity actor;
+public class PlankGolemBowAttackGoal extends Goal {
+    private final PlankGolemEntity actor;
     private final double speed;
     private final float squaredRange;
     private int targetSeeingTicker;
@@ -14,7 +14,7 @@ public class WoodGolemBowAttackGoal extends Goal {
     private boolean backward;
     private int combatTicks = -1;
 
-    public WoodGolemBowAttackGoal(WoodGolemEntity actor, double speed, float range) {
+    public PlankGolemBowAttackGoal(PlankGolemEntity actor, double speed, float range) {
         this.actor = actor;
         this.speed = speed;
         this.squaredRange = range * range;
@@ -89,7 +89,7 @@ public class WoodGolemBowAttackGoal extends Goal {
             if(this.actor.getArrows() > 0) {
                 if(bl || this.targetSeeingTicker > -60) {
                     if(this.actor.getPulling() > 10) {
-                        this.actor.attack(livingEntity, 20);
+                        this.actor.attack(livingEntity, 15);
                         this.actor.clearPulling();
                     }
                     else this.actor.incrementPulling();

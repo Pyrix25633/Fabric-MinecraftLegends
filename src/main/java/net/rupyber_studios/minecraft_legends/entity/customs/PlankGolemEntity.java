@@ -27,7 +27,7 @@ import net.minecraft.util.TimeHelper;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.World;
 import net.rupyber_studios.minecraft_legends.MinecraftLegends;
-import net.rupyber_studios.minecraft_legends.entity.ai.WoodGolemBowAttackGoal;
+import net.rupyber_studios.minecraft_legends.entity.ai.PlankGolemBowAttackGoal;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -39,14 +39,14 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.UUID;
 
-public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatable, RangedAttackMob, InventoryOwner {
-    private static final TrackedData<Integer> ARROWS = DataTracker.registerData(WoodGolemEntity.class, TrackedDataHandlerRegistry.INTEGER);
+public class PlankGolemEntity extends GolemEntity implements Angerable, IAnimatable, RangedAttackMob, InventoryOwner {
+    private static final TrackedData<Integer> ARROWS = DataTracker.registerData(PlankGolemEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final UniformIntProvider ANGER_TIME_RANGE;
-    private static final Identifier ARROWS_EMPTY = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/wood_golem.png");
-    private static final Identifier ARROWS_1 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/wood_golem_arrows_1.png");
-    private static final Identifier ARROWS_2 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/wood_golem_arrows_2.png");
-    private static final Identifier ARROWS_3 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/wood_golem_arrows_3.png");
-    private static final Identifier ARROWS_FULL = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/wood_golem_arrows_full.png");
+    private static final Identifier ARROWS_EMPTY = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem.png");
+    private static final Identifier ARROWS_1 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem_arrows_1.png");
+    private static final Identifier ARROWS_2 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem_arrows_2.png");
+    private static final Identifier ARROWS_3 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem_arrows_3.png");
+    private static final Identifier ARROWS_FULL = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem_arrows_full.png");
     private final AnimationFactory factory = new AnimationFactory(this);
     private int angerTime;
     @Nullable
@@ -54,7 +54,7 @@ public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatab
     private int pulling;
     private final SimpleInventory inventory = new SimpleInventory(1);
 
-    public WoodGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
+    public PlankGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
         super(entityType, world);
         this.stepHeight = 1.0F;
         setArrows(0);
@@ -72,7 +72,7 @@ public class WoodGolemEntity extends GolemEntity implements Angerable, IAnimatab
         this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.9, 32.0F));
         this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.6, false));
         this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.6));
-        this.goalSelector.add(4, new WoodGolemBowAttackGoal(this, 1.0, 16.5F));
+        this.goalSelector.add(4, new PlankGolemBowAttackGoal(this, 1.0, 16.5F));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.5F));
         this.goalSelector.add(8, new LookAroundGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this));
