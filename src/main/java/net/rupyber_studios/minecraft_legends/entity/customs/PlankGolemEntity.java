@@ -29,6 +29,7 @@ import net.minecraft.world.World;
 import net.rupyber_studios.minecraft_legends.MinecraftLegends;
 import net.rupyber_studios.minecraft_legends.entity.ai.PlankGolemBowAttackGoal;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -72,7 +73,7 @@ public class PlankGolemEntity extends GolemEntity implements Angerable, IAnimata
         this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.9, 32.0F));
         this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.6, false));
         this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.6));
-        this.goalSelector.add(4, new PlankGolemBowAttackGoal(this, 1.0, 16.5F));
+        this.goalSelector.add(4, new PlankGolemBowAttackGoal(this, 1.0, 12F));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.5F));
         this.goalSelector.add(8, new LookAroundGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this));
@@ -88,10 +89,18 @@ public class PlankGolemEntity extends GolemEntity implements Angerable, IAnimata
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if(event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.wood_golem.walk"));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.plank_golem.walk", true));
             return PlayState.CONTINUE;
         }
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.wood_golem.idle"));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.plank_golem.idle", true));
+        return PlayState.CONTINUE;
+    }
+
+    private <E extends IAnimatable> PlayState attackPredicate(AnimationEvent<E> event) {
+        if(this.isAttacking() && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
+            event.getController().markNeedsReload();
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.plank_golem.attack", false));
+        }
         return PlayState.CONTINUE;
     }
 
@@ -136,13 +145,13 @@ public class PlankGolemEntity extends GolemEntity implements Angerable, IAnimata
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putInt("arrows", getArrows());
+        nbt.putInt("Arrows", getArrows());
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        setArrows(nbt.getInt("arrows"));
+        setArrows(nbt.getInt("Arrows"));
     }
 
     public Identifier getTextureResource() {
@@ -170,6 +179,7 @@ public class PlankGolemEntity extends GolemEntity implements Angerable, IAnimata
     @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController<>(this, "controller", 0, this::predicate));
+        animationData.addAnimationController(new AnimationController<>(this, "attackController", 0, this::attackPredicate));
     }
 
     @Override
@@ -270,13 +280,22 @@ public class PlankGolemEntity extends GolemEntity implements Angerable, IAnimata
     }
 
     @Override
+    public boolean canGather(ItemStack stack) {
+        return this.canPickupItem(stack);
+    }
+
+    @Override
     public void sendPickup(Entity item, int count) {
-        int a = this.getArrows();
-        int missing = 64 - a;
-        super.sendPickup(item, Math.min(count, missing));
-        ItemStack stack = inventory.getStack(0);
-        this.setArrows(a + stack.getCount());
-        inventory.clear();
+        if(!item.isRemoved() && !this.world.isClient) {
+            int a = this.getArrows();
+            int missing = 64 - a;
+            super.sendPickup(item, Math.min(count, missing));
+            ItemStack stack = getStackInHand(Hand.MAIN_HAND);
+            this.setArrows(a + stack.getCount());
+            stack.decrement(Math.min(count, missing));
+            this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.AIR));
+            this.dropStack(stack);
+        }
     }
 
     @Override

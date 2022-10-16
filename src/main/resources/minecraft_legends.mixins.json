@@ -4,6 +4,7 @@
   "package": "net.rupyber_studios.minecraft_legends.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ZombieEntityMixin"
   ],
   "client": [
     "ExampleMixin"

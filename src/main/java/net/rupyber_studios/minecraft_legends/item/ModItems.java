@@ -10,7 +10,7 @@ import net.rupyber_studios.minecraft_legends.entity.ModEntities;
 
 public class ModItems {
     public static final Item PLANK_GOLEM_SPAWN_EGG = registerItem("plank_golem_spawn_egg",
-            new SpawnEggItem(ModEntities.PLANK_GOLEM, 0xb27c35, 0x976b36,
+            new SpawnEggItem(ModEntities.PLANK_GOLEM, 0xb08050, 0x7f5e3c,
                     new FabricItemSettings().group(ModItemGroup.MINECRAFT_LEGENDS).maxCount(1)));
 
     private static Item registerItem(String name, Item item) {
