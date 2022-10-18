@@ -1,4 +1,4 @@
-package net.rupyber_studios.minecraft_legends.entity.customs;
+package net.rupyber_studios.minecraft_legends.entity.custom;
 
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RangedAttackMob;
@@ -40,20 +40,15 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.UUID;
 
-public class PlankGolemEntity extends GolemEntity implements Angerable, IAnimatable, RangedAttackMob, InventoryOwner {
+public class PlankGolemEntity extends ModAbstractGolemEntity implements RangedAttackMob, InventoryOwner {
     private static final TrackedData<Integer> ARROWS = DataTracker.registerData(PlankGolemEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final UniformIntProvider ANGER_TIME_RANGE;
     private static final Identifier ARROWS_EMPTY = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem.png");
     private static final Identifier ARROWS_1 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem_arrows_1.png");
     private static final Identifier ARROWS_2 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem_arrows_2.png");
     private static final Identifier ARROWS_3 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem_arrows_3.png");
     private static final Identifier ARROWS_FULL = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem_arrows_full.png");
-    private final AnimationFactory factory = new AnimationFactory(this);
-    private int angerTime;
-    @Nullable
-    private UUID angryAt;
-    private int pulling;
     private final SimpleInventory inventory = new SimpleInventory(1);
+    private int pulling;
 
     public PlankGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
         super(entityType, world);
@@ -70,16 +65,8 @@ public class PlankGolemEntity extends GolemEntity implements Angerable, IAnimata
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(1, new SwimGoal(this));
-        this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.9, 32.0F));
-        this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.6, false));
-        this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.6));
+        super.initGoals();
         this.goalSelector.add(4, new PlankGolemBowAttackGoal(this, 1.0, 12F));
-        this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.5F));
-        this.goalSelector.add(8, new LookAroundGoal(this));
-        this.targetSelector.add(2, new RevengeGoal(this));
-        this.targetSelector.add(3, new ActiveTargetGoal<>(this, MobEntity.class, 5, false, false, (entity) -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
-        this.targetSelector.add(4, new UniversalAngerGoal<>(this, false));
     }
 
     public static DefaultAttributeContainer.Builder setAttributes() {
@@ -183,11 +170,6 @@ public class PlankGolemEntity extends GolemEntity implements Angerable, IAnimata
         animationData.addAnimationController(new AnimationController<>(this, "attackController", 0, this::attackPredicate));
     }
 
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
-    }
-
     public int getArrows() {
         return this.dataTracker.get(ARROWS);
     }
@@ -232,31 +214,6 @@ public class PlankGolemEntity extends GolemEntity implements Angerable, IAnimata
         return SoundEvents.BLOCK_BAMBOO_HIT;
     }
 
-    public void chooseRandomAngerTime() {
-        this.setAngerTime(ANGER_TIME_RANGE.get(this.random));
-    }
-
-    public void setAngerTime(int angerTime) {
-        this.angerTime = angerTime;
-    }
-
-    public int getAngerTime() {
-        return this.angerTime;
-    }
-
-    public void setAngryAt(@Nullable UUID angryAt) {
-        this.angryAt = angryAt;
-    }
-
-    @Nullable
-    public UUID getAngryAt() {
-        return this.angryAt;
-    }
-
-    static {
-        ANGER_TIME_RANGE = TimeHelper.betweenSeconds(20, 39);
-    }
-
     @Override
     public void attack(LivingEntity target, float pullProgress) {
         ItemStack itemStack = new ItemStack(Items.ARROW, 1);
@@ -289,14 +246,25 @@ public class PlankGolemEntity extends GolemEntity implements Angerable, IAnimata
     public void sendPickup(Entity item, int count) {
         if(!item.isRemoved() && !this.world.isClient) {
             int a = this.getArrows();
-            int missing = 64 - a;
-            super.sendPickup(item, Math.min(count, missing));
+            super.sendPickup(item, count);
             ItemStack stack = getStackInHand(Hand.MAIN_HAND);
             this.setArrows(a + stack.getCount());
-            stack.decrement(Math.min(count, missing));
+            stack.decrement(Math.min(count, 64 - a));
             this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.AIR));
             this.dropStack(stack);
         }
+    }
+
+    @Override
+    protected void drop(DamageSource source) {
+        if(!this.world.isClient) {
+            this.dropStack(new ItemStack(Items.ARROW, getArrows()));
+        }
+    }
+
+    @Override
+    protected void dropLoot(DamageSource source, boolean causedByPlayer) {
+        this.drop(source);
     }
 
     @Override
@@ -304,7 +272,7 @@ public class PlankGolemEntity extends GolemEntity implements Angerable, IAnimata
         return inventory;
     }
 
-    public enum Arrows {
+    private enum Arrows {
         EMPTY,
         LOW,
         MEDIUM,

@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.rupyber_studios.minecraft_legends.entity.ModEntities;
 import net.rupyber_studios.minecraft_legends.entity.client.PlankGolemRenderer;
-import net.rupyber_studios.minecraft_legends.entity.customs.PlankGolemEntity;
+import net.rupyber_studios.minecraft_legends.entity.custom.PlankGolemEntity;
 
 public class ModRegistries {
     public static void registerAttributes() {

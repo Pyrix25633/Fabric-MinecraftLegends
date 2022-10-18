@@ -7,7 +7,7 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.rupyber_studios.minecraft_legends.MinecraftLegends;
-import net.rupyber_studios.minecraft_legends.entity.customs.PlankGolemEntity;
+import net.rupyber_studios.minecraft_legends.entity.custom.PlankGolemEntity;
 
 public class ModEntities {
     public static final EntityType<PlankGolemEntity> PLANK_GOLEM = Registry.register(Registry.ENTITY_TYPE,

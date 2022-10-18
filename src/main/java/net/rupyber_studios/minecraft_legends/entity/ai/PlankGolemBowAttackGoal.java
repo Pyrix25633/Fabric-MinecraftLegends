@@ -3,7 +3,7 @@ package net.rupyber_studios.minecraft_legends.entity.ai;
 import java.util.EnumSet;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
-import net.rupyber_studios.minecraft_legends.entity.customs.PlankGolemEntity;
+import net.rupyber_studios.minecraft_legends.entity.custom.PlankGolemEntity;
 
 public class PlankGolemBowAttackGoal extends Goal {
     private final PlankGolemEntity actor;

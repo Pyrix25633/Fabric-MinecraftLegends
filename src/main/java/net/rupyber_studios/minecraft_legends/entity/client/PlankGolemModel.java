@@ -2,7 +2,7 @@ package net.rupyber_studios.minecraft_legends.entity.client;
 
 import net.minecraft.util.Identifier;
 import net.rupyber_studios.minecraft_legends.MinecraftLegends;
-import net.rupyber_studios.minecraft_legends.entity.customs.PlankGolemEntity;
+import net.rupyber_studios.minecraft_legends.entity.custom.PlankGolemEntity;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
