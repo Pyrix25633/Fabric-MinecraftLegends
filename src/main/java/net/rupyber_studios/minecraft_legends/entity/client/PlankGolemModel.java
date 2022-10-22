@@ -29,7 +29,7 @@ public class PlankGolemModel extends AnimatedGeoModel<PlankGolemEntity> {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone body = this.getAnimationProcessor().getBone("body");
 
-        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
+        EntityModelData extraData = (EntityModelData)customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         if (body != null) {
             body.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
             body.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
