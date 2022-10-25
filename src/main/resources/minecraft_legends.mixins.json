@@ -13,7 +13,9 @@
     "VindicatorEntityMixin",
     "PillagerEntityMixin",
     "IllusionerEntityMixin",
-    "EvokerEntityMixin"
+    "EvokerEntityMixin",
+    "CarvedPumpkinBlockAccessor",
+    "CarvedPumpkinBlockMixin"
   ],
   "client": [
     "ExampleMixin"
