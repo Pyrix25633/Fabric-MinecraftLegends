@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Minecraft Legends Mod",
-  "description": "This is a fabric mod to add some mobs, structures, blocks and items from Minecraft Legends to Minecraft!",
+  "description": "This is a Fabric and Quilt mod to add some mobs, structures, blocks and items from Minecraft Legends to Minecraft!",
   "authors": [
     "Rupyber Studios",
     "Pyrix25633",

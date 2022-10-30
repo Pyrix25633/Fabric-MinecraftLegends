@@ -2,7 +2,7 @@
 
 ### *A mod by Rupyber Studios*
 
-This is a fabric mod to add some mobs, structures, blocks and items from Minecraft Legends to Minecraft!
+This is a Fabric and Quilt mod to add some mobs, structures, blocks and items from Minecraft Legends to Minecraft!
 
 ## Visit our [Website](https://rupyberstudios.github.io/website/)!
 
