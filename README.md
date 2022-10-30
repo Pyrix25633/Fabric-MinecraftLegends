@@ -6,6 +6,7 @@ This is a fabric mod to add some mobs, structures, blocks and items from Minecra
 
 ## Visit our [Website](https://rupyberstudios.github.io/website/)!
 
+![Minecraft Legends Mod Logo](https://github.com/RupyberStudios/website/blob/main/img/minecraft_legends_mod_logo_small.png)
 ![requires Fabric API](https://i.imgur.com/HabVZJR.png)
 
 ### Installation:
