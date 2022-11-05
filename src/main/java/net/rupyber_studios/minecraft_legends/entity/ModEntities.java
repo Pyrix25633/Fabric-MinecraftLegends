@@ -16,5 +16,5 @@ public class ModEntities {
                     .dimensions(EntityDimensions.fixed(0.9F,1.2F)).build());
     public static final EntityType<GrindstoneGolemEntity> GRINDSTONE_GOLEM = Registry.register(Registry.ENTITY_TYPE,
             new Identifier(MinecraftLegends.MOD_ID, "grindstone_golem"), FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, GrindstoneGolemEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.9F,1.2F)).build());
+                    .dimensions(EntityDimensions.fixed(0.9F,1.3F)).build());
 }

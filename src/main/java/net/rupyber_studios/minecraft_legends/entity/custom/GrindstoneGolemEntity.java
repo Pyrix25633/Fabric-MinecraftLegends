@@ -153,7 +153,7 @@ public class GrindstoneGolemEntity extends ModAbstractGolemEntity implements IAn
 
     @Override
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
-        return 0.7F;
+        return 0.8F;
     }
 
     @Override

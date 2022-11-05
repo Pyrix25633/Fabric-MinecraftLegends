@@ -13,7 +13,7 @@ public class ModItems {
             new SpawnEggItem(ModEntities.PLANK_GOLEM, 0xb08050, 0x7f5e3c,
                     new FabricItemSettings().group(ModItemGroup.MINECRAFT_LEGENDS).maxCount(1)));
     public static final Item GRINDSTONE_GOLEM_SPAWN_EGG = registerItem("grindstone_golem_spawn_egg",
-            new SpawnEggItem(ModEntities.GRINDSTONE_GOLEM, 0xab9b9b, 0xb5aba7,
+            new SpawnEggItem(ModEntities.GRINDSTONE_GOLEM, 0xb5aba7, 0x8d7f7f,
                     new FabricItemSettings().group(ModItemGroup.MINECRAFT_LEGENDS).maxCount(1)));
 
     private static Item registerItem(String name, Item item) {
