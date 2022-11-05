@@ -8,10 +8,13 @@ import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
-public class PlankGolemModel extends AnimatedGeoModel<PlankGolemEntity> {
+public class PlankGolemEntityModel extends AnimatedGeoModel<PlankGolemEntity> {
+    private static final Identifier MODEL_RESOURCE = new Identifier(MinecraftLegends.MOD_ID, "geo/plank_golem.geo.json");
+    private static final Identifier ANIMATION_RESOURCE = new Identifier(MinecraftLegends.MOD_ID ,"animations/plank_golem.animations.json");
+
     @Override
     public Identifier getModelResource(PlankGolemEntity object) {
-        return new Identifier(MinecraftLegends.MOD_ID, "geo/plank_golem.geo.json");
+        return MODEL_RESOURCE;
     }
 
     @Override
@@ -21,7 +24,7 @@ public class PlankGolemModel extends AnimatedGeoModel<PlankGolemEntity> {
 
     @Override
     public Identifier getAnimationResource(PlankGolemEntity animatable) {
-        return new Identifier(MinecraftLegends.MOD_ID ,"animations/plank_golem.animations.json");
+        return ANIMATION_RESOURCE;
     }
 
     @Override
@@ -30,7 +33,7 @@ public class PlankGolemModel extends AnimatedGeoModel<PlankGolemEntity> {
         IBone body = this.getAnimationProcessor().getBone("body");
 
         EntityModelData extraData = (EntityModelData)customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        if (body != null) {
+        if(body != null) {
             body.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
             body.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
         }

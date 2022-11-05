@@ -26,6 +26,7 @@ public abstract class ModAbstractGolemEntity extends GolemEntity implements Ange
 
     protected ModAbstractGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
         super(entityType, world);
+        this.stepHeight = 1.0F;
     }
 
     @Override

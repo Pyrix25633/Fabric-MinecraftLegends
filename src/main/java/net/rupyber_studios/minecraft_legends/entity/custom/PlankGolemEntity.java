@@ -34,17 +34,16 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class PlankGolemEntity extends ModAbstractGolemEntity implements RangedAttackMob, InventoryOwner {
     private static final TrackedData<Integer> ARROWS = DataTracker.registerData(PlankGolemEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final Identifier ARROWS_EMPTY = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem.png");
-    private static final Identifier ARROWS_1 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem_arrows_1.png");
-    private static final Identifier ARROWS_2 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem_arrows_2.png");
-    private static final Identifier ARROWS_3 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem_arrows_3.png");
-    private static final Identifier ARROWS_FULL = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem_arrows_full.png");
+    private static final Identifier ARROWS_EMPTY = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem/plank_golem.png");
+    private static final Identifier ARROWS_1 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem/plank_golem_arrows_1.png");
+    private static final Identifier ARROWS_2 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem/plank_golem_arrows_2.png");
+    private static final Identifier ARROWS_3 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem/plank_golem_arrows_3.png");
+    private static final Identifier ARROWS_FULL = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem/plank_golem_arrows_full.png");
     private final SimpleInventory inventory = new SimpleInventory(1);
     private int pulling;
 
     public PlankGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
         super(entityType, world);
-        this.stepHeight = 1.0F;
         setArrows(0);
         this.setCanPickUpLoot(true);
     }
@@ -58,7 +57,7 @@ public class PlankGolemEntity extends ModAbstractGolemEntity implements RangedAt
     @Override
     protected void initGoals() {
         super.initGoals();
-        this.goalSelector.add(4, new PlankGolemBowAttackGoal(this, 1.0, 12F));
+        this.goalSelector.add(2, new PlankGolemBowAttackGoal(this, 1.0, 12F));
     }
 
     public static DefaultAttributeContainer.Builder setAttributes() {
@@ -136,24 +135,13 @@ public class PlankGolemEntity extends ModAbstractGolemEntity implements RangedAt
 
     public Identifier getTextureResource() {
         Arrows arrows = Arrows.from(this.getArrows());
-        switch(arrows) {
-            case EMPTY -> {
-                return ARROWS_EMPTY;
-            }
-            case LOW -> {
-                return ARROWS_1;
-            }
-            case MEDIUM -> {
-                return ARROWS_2;
-            }
-            case HIGH -> {
-                return ARROWS_3;
-            }
-            case FULL -> {
-                return ARROWS_FULL;
-            }
-        }
-        return ARROWS_EMPTY;
+        return switch(arrows) {
+            case EMPTY -> ARROWS_EMPTY;
+            case LOW -> ARROWS_1;
+            case MEDIUM -> ARROWS_2;
+            case HIGH -> ARROWS_3;
+            default -> ARROWS_FULL;
+        };
     }
 
     @Override
