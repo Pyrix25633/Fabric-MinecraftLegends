@@ -36,7 +36,8 @@ public class GrindstoneGolemEntityModel extends AnimatedGeoModel<GrindstoneGolem
         EntityModelData extraData = (EntityModelData)customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         if(body != null && head != null) {
             head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
-            body.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
+            if(!customPredicate.isMoving())
+                body.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
         }
     }
 }
