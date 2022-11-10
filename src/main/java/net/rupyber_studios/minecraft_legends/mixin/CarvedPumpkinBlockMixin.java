@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import net.rupyber_studios.minecraft_legends.entity.ModEntities;
+import net.rupyber_studios.minecraft_legends.entity.custom.GrindstoneGolemEntity;
 import net.rupyber_studios.minecraft_legends.entity.custom.PlankGolemEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,19 +27,17 @@ import java.util.Iterator;
 @Mixin(CarvedPumpkinBlock.class)
 public abstract class CarvedPumpkinBlockMixin {
     @Nullable
-    private BlockPattern plankGolemDispenserPattern;
+    private BlockPattern plankGolemDispenserPattern, grindstoneGolemDispenserPattern;
     @Nullable
-    private BlockPattern plankGolemPattern;
+    private BlockPattern plankGolemPattern, grindstoneGolemPattern;
 
     @Inject(method = "trySpawnEntity", at = @At("HEAD"), cancellable = true)
     private void trySpawnEntity(World world, BlockPos pos, CallbackInfo ci) {
         BlockPattern.Result result = this.getPlankGolemPattern().searchAround(world, pos);
-        int i;
         Iterator<ServerPlayerEntity> var6;
         ServerPlayerEntity serverPlayerEntity;
-        int j;
         if(result != null) {
-            for(i = 0; i < this.getPlankGolemPattern().getHeight(); ++i) {
+            for(int i = 0; i < this.getPlankGolemPattern().getHeight(); ++i) {
                 CachedBlockPosition cachedBlockPosition = result.translate(0, i, 0);
                 world.setBlockState(cachedBlockPosition.getBlockPos(), Blocks.AIR.getDefaultState(), 2);
                 world.syncWorldEvent(2001, cachedBlockPosition.getBlockPos(), Block.getRawIdFromState(cachedBlockPosition.getBlockState()));
@@ -56,7 +55,33 @@ public abstract class CarvedPumpkinBlockMixin {
                 Criteria.SUMMONED_ENTITY.trigger(serverPlayerEntity, plankGolemEntity);
             }
 
-            for(j = 0; j < this.getPlankGolemPattern().getHeight(); ++j) {
+            for(int j = 0; j < this.getPlankGolemPattern().getHeight(); ++j) {
+                CachedBlockPosition cachedBlockPosition2 = result.translate(0, j, 0);
+                world.updateNeighbors(cachedBlockPosition2.getBlockPos(), Blocks.AIR);
+            }
+            ci.cancel();
+        }
+        result = this.getGrindstoneGolemPattern().searchAround(world, pos);
+        if(result != null) {
+            for(int i = 0; i < this.getGrindstoneGolemPattern().getHeight(); ++i) {
+                CachedBlockPosition cachedBlockPosition = result.translate(0, i, 0);
+                world.setBlockState(cachedBlockPosition.getBlockPos(), Blocks.AIR.getDefaultState(), 2);
+                world.syncWorldEvent(2001, cachedBlockPosition.getBlockPos(), Block.getRawIdFromState(cachedBlockPosition.getBlockState()));
+            }
+
+            GrindstoneGolemEntity grindstoneGolemEntity = ModEntities.GRINDSTONE_GOLEM.create(world);
+            BlockPos blockPos = result.translate(0, 2, 0).getBlockPos();
+            assert grindstoneGolemEntity != null;
+            grindstoneGolemEntity.refreshPositionAndAngles((double)blockPos.getX() + 0.5, (double)blockPos.getY() + 1.05, (double)blockPos.getZ() + 0.5, 0.0F, 0.0F);
+            world.spawnEntity(grindstoneGolemEntity);
+            var6 = world.getNonSpectatingEntities(ServerPlayerEntity.class, grindstoneGolemEntity.getBoundingBox().expand(5.0)).iterator();
+
+            while(var6.hasNext()) {
+                serverPlayerEntity = var6.next();
+                Criteria.SUMMONED_ENTITY.trigger(serverPlayerEntity, grindstoneGolemEntity);
+            }
+
+            for(int j = 0; j < this.getGrindstoneGolemPattern().getHeight(); ++j) {
                 CachedBlockPosition cachedBlockPosition2 = result.translate(0, j, 0);
                 world.updateNeighbors(cachedBlockPosition2.getBlockPos(), Blocks.AIR);
             }
@@ -69,19 +94,36 @@ public abstract class CarvedPumpkinBlockMixin {
         if(getPlankGolemDispenserPattern().searchAround(world, pos) != null) {
             cir.setReturnValue(true); cir.cancel();
         }
+        if(getGrindstoneGolemDispenserPattern().searchAround(world, pos) != null) {
+            cir.setReturnValue(true); cir.cancel();
+        }
     }
 
     private BlockPattern getPlankGolemDispenserPattern() {
-        if (this.plankGolemDispenserPattern == null) {
+        if(this.plankGolemDispenserPattern == null) {
             this.plankGolemDispenserPattern = BlockPatternBuilder.start().aisle(" ", "#").where('#', CachedBlockPosition.matchesBlockState(BlockStatePredicate.forBlock(Blocks.OAK_PLANKS))).build();
         }
         return this.plankGolemDispenserPattern;
     }
 
     private BlockPattern getPlankGolemPattern() {
-        if (this.plankGolemPattern == null) {
+        if(this.plankGolemPattern == null) {
             this.plankGolemPattern = BlockPatternBuilder.start().aisle("^", "#").where('^', CachedBlockPosition.matchesBlockState(CarvedPumpkinBlockAccessor.getIS_GOLEM_HEAD_PREDICATE())).where('#', CachedBlockPosition.matchesBlockState(BlockStatePredicate.forBlock(Blocks.OAK_PLANKS))).build();
         }
         return this.plankGolemPattern;
+    }
+
+    private BlockPattern getGrindstoneGolemDispenserPattern() {
+        if(this.grindstoneGolemDispenserPattern == null) {
+            this.grindstoneGolemDispenserPattern = BlockPatternBuilder.start().aisle(" ", "#").where('#', CachedBlockPosition.matchesBlockState(BlockStatePredicate.forBlock(Blocks.GRINDSTONE))).build();
+        }
+        return this.grindstoneGolemDispenserPattern;
+    }
+
+    private BlockPattern getGrindstoneGolemPattern() {
+        if(this.grindstoneGolemPattern == null) {
+            this.grindstoneGolemPattern = BlockPatternBuilder.start().aisle("^", "#").where('^', CachedBlockPosition.matchesBlockState(CarvedPumpkinBlockAccessor.getIS_GOLEM_HEAD_PREDICATE())).where('#', CachedBlockPosition.matchesBlockState(BlockStatePredicate.forBlock(Blocks.GRINDSTONE))).build();
+        }
+        return this.grindstoneGolemPattern;
     }
 }

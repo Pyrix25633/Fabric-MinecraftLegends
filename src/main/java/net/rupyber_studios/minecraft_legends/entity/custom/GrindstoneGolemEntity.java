@@ -11,9 +11,14 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.GolemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
@@ -83,6 +88,26 @@ public class GrindstoneGolemEntity extends ModAbstractGolemEntity implements IAn
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grindstone_golem.attack", false));
         }
         return PlayState.CONTINUE;
+    }
+
+    @Override
+    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
+        ItemStack itemStack = player.getStackInHand(hand);
+        if(itemStack.isOf(Items.COBBLESTONE) || itemStack.isOf(Items.STONE)) {
+            float f = this.getHealth();
+            this.heal(15.0F);
+            if(this.getHealth() == f) {
+                return ActionResult.PASS;
+            } else {
+                float g = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
+                this.playSound(SoundEvents.BLOCK_WOOD_PLACE, 1.0F, g);
+                if(!player.getAbilities().creativeMode) {
+                    itemStack.decrement(1);
+                }
+                return ActionResult.success(this.world.isClient);
+            }
+        }
+        else return ActionResult.PASS;
     }
 
     @Override

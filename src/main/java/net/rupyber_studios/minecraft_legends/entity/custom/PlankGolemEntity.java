@@ -83,6 +83,7 @@ public class PlankGolemEntity extends ModAbstractGolemEntity implements RangedAt
         return PlayState.CONTINUE;
     }
 
+    @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack itemStack = player.getStackInHand(hand);
         if(itemStack.isOf(Items.ARROW)) {
