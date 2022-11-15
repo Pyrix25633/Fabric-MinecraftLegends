@@ -34,11 +34,11 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class PlankGolemEntity extends ModAbstractGolemEntity implements RangedAttackMob, InventoryOwner {
     private static final TrackedData<Integer> ARROWS = DataTracker.registerData(PlankGolemEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final Identifier ARROWS_EMPTY = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem/plank_golem.png");
-    private static final Identifier ARROWS_1 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem/plank_golem_arrows_1.png");
-    private static final Identifier ARROWS_2 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem/plank_golem_arrows_2.png");
-    private static final Identifier ARROWS_3 = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem/plank_golem_arrows_3.png");
-    private static final Identifier ARROWS_FULL = new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem/plank_golem_arrows_full.png");
+    private static final Identifier ARROWS_EMPTY = getTextureResource(Arrows.EMPTY);
+    private static final Identifier ARROWS_1 = getTextureResource(Arrows.LOW);
+    private static final Identifier ARROWS_2 = getTextureResource(Arrows.MEDIUM);
+    private static final Identifier ARROWS_3 = getTextureResource(Arrows.HIGH);
+    private static final Identifier ARROWS_FULL = getTextureResource(Arrows.FULL);
     private final SimpleInventory inventory = new SimpleInventory(1);
     private int pulling;
 
@@ -143,6 +143,11 @@ public class PlankGolemEntity extends ModAbstractGolemEntity implements RangedAt
             case HIGH -> ARROWS_3;
             default -> ARROWS_FULL;
         };
+    }
+
+    public static Identifier getTextureResource(Arrows arrows) {
+        return new Identifier(MinecraftLegends.MOD_ID, "textures/entity/plank_golem/plank_golem_arrows_" +
+                arrows.toString() + ".png");
     }
 
     @Override
@@ -266,6 +271,17 @@ public class PlankGolemEntity extends ModAbstractGolemEntity implements RangedAt
             else if(arrowQuantity < 26) return MEDIUM;
             else if(arrowQuantity < 48) return HIGH;
             else return FULL;
+        }
+
+        @Override
+        public String toString() {
+            return switch(this) {
+                case EMPTY -> "empty";
+                case LOW -> "1";
+                case MEDIUM -> "2";
+                case HIGH -> "3";
+                default -> "full";
+            };
         }
     }
 }

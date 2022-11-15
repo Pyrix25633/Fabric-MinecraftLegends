@@ -13,10 +13,10 @@ public enum Crack {
 
     @Override
     public String toString() {
-        switch(this) {
-            case NONE -> {return "none";}
-            case LOW -> {return "low";}
-            default -> {return "high";}
-        }
+        return switch(this) {
+            case NONE -> "none";
+            case LOW -> "low";
+            default -> "high";
+        };
     }
 }
