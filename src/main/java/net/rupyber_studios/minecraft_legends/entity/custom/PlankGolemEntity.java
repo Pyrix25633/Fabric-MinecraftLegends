@@ -21,6 +21,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.rupyber_studios.minecraft_legends.MinecraftLegends;
 import net.rupyber_studios.minecraft_legends.entity.ai.PlankGolemBowAttackGoal;
@@ -40,12 +41,14 @@ public class PlankGolemEntity extends ModAbstractGolemEntity implements RangedAt
     private static final Identifier ARROWS_3 = getTextureResource(Arrows.HIGH);
     private static final Identifier ARROWS_FULL = getTextureResource(Arrows.FULL);
     private final SimpleInventory inventory = new SimpleInventory(1);
-    private int pulling;
+    private int pulling, maxPulling;
 
     public PlankGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
         super(entityType, world);
         setArrows(0);
         this.setCanPickUpLoot(true);
+        pulling = 0;
+        setMaxPulling();
     }
 
     @Override
@@ -168,6 +171,10 @@ public class PlankGolemEntity extends ModAbstractGolemEntity implements RangedAt
         this.dataTracker.set(ARROWS, this.dataTracker.get(ARROWS) - 1);
     }
 
+    public boolean isMaxPulling() {
+        return pulling >= maxPulling;
+    }
+
     public int getPulling() {
         return pulling;
     }
@@ -178,6 +185,11 @@ public class PlankGolemEntity extends ModAbstractGolemEntity implements RangedAt
 
     public void clearPulling() {
         pulling = 0;
+        setMaxPulling();
+    }
+
+    private void setMaxPulling() {
+        maxPulling = Random.create().nextBetween(7, 12);
     }
 
     @Override
@@ -203,7 +215,7 @@ public class PlankGolemEntity extends ModAbstractGolemEntity implements RangedAt
     @Override
     public void attack(LivingEntity target, float pullProgress) {
         ItemStack itemStack = new ItemStack(Items.ARROW, 1);
-        PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress);
+        PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress / 3);
         double d = target.getX() - this.getX();
         double e = target.getBodyY(0.3333333333333333) - persistentProjectileEntity.getY();
         double f = target.getZ() - this.getZ();

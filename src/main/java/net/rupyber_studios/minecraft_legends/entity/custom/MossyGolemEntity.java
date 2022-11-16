@@ -7,20 +7,15 @@ import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.rupyber_studios.minecraft_legends.MinecraftLegends;
 import software.bernie.geckolib3.core.AnimationState;
@@ -30,8 +25,6 @@ import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
-
-import static net.rupyber_studios.minecraft_legends.entity.custom.Crack.LOW;
 
 public class MossyGolemEntity extends ModAbstractGolemEntity implements IAnimatable {
     private static final Identifier CRACK_NONE = getTextureResource(Crack.NONE);
@@ -50,10 +43,10 @@ public class MossyGolemEntity extends ModAbstractGolemEntity implements IAnimata
 
     public static DefaultAttributeContainer.Builder setAttributes() {
         return GolemEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 50D)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 6D)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.7D);
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 60D)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.30D)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 6.5D)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.8D);
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {

@@ -31,8 +31,6 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-import static net.rupyber_studios.minecraft_legends.entity.custom.Crack.LOW;
-
 public class GrindstoneGolemEntity extends ModAbstractGolemEntity implements IAnimatable {
     private static final TrackedData<Byte> VARIANT = DataTracker.registerData(GrindstoneGolemEntity.class, TrackedDataHandlerRegistry.BYTE);
     private static final Identifier VARIANT_0_CRACK_NONE = getTextureResource(0, Crack.NONE);

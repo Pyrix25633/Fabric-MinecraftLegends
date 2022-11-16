@@ -78,7 +78,7 @@ public class PlankGolemBowAttackGoal extends Goal {
             if(this.combatTicks > -1) {
                 if(d > (double)(this.squaredRange * 0.75F))
                     this.backward = false;
-                else if (d < (double)(this.squaredRange * 0.25F))
+                else if(d < (double)(this.squaredRange * 0.25F))
                     this.backward = true;
 
                 this.actor.getMoveControl().strafeTo(this.backward ? -0.5F : 0.5F, this.movingToLeft ? 0.5F : -0.5F);
@@ -88,8 +88,8 @@ public class PlankGolemBowAttackGoal extends Goal {
 
             if(this.actor.getArrows() > 0) {
                 if(bl || this.targetSeeingTicker > -60) {
-                    if(this.actor.getPulling() > 10) {
-                        this.actor.attack(livingEntity, 15);
+                    if(this.actor.isMaxPulling()) {
+                        this.actor.attack(livingEntity, this.actor.getPulling());
                         this.actor.clearPulling();
                     }
                     else this.actor.incrementPulling();
