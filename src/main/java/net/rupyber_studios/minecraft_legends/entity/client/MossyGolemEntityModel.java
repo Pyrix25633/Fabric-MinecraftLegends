@@ -30,14 +30,15 @@ public class MossyGolemEntityModel extends AnimatedGeoModel<MossyGolemEntity> {
     @Override
     public void setLivingAnimations(MossyGolemEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
-        IBone body = this.getAnimationProcessor().getBone("body");
+        IBone arms = this.getAnimationProcessor().getBone("arms");
         IBone head = this.getAnimationProcessor().getBone("head");
 
         EntityModelData extraData = (EntityModelData)customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        if(body != null && head != null) {
-            head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
-            if(!customPredicate.isMoving())
-                body.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
+        if(arms != null && head != null) {
+            head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F) * -1);
+            arms.setRotationX(extraData.headPitch * ((float) Math.PI / 180F) * -1);
+            head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
+            arms.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
         }
     }
 }

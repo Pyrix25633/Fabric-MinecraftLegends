@@ -15,6 +15,9 @@ public class ModItems {
     public static final Item GRINDSTONE_GOLEM_SPAWN_EGG = registerItem("grindstone_golem_spawn_egg",
             new SpawnEggItem(ModEntities.GRINDSTONE_GOLEM, 0xb5aba7, 0x8d7f7f,
                     new FabricItemSettings().group(ModItemGroup.MINECRAFT_LEGENDS).maxCount(1)));
+    public static final Item MOSSY_GOLEM_SPAWN_EGG = registerItem("mossy_golem_spawn_egg",
+            new SpawnEggItem(ModEntities.MOSSY_GOLEM, 0x7c9943, 0xaaae9b,
+                    new FabricItemSettings().group(ModItemGroup.MINECRAFT_LEGENDS).maxCount(1)));
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registry.ITEM, new Identifier(MinecraftLegends.MOD_ID, name), item);

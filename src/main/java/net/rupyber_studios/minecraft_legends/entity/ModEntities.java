@@ -20,5 +20,5 @@ public class ModEntities {
                     .dimensions(EntityDimensions.fixed(0.9F,1.3F)).build());
     public static final EntityType<MossyGolemEntity> MOSSY_GOLEM = Registry.register(Registry.ENTITY_TYPE,
             new Identifier(MinecraftLegends.MOD_ID, "mossy_golem"), FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, MossyGolemEntity::new)
-                    .dimensions(EntityDimensions.fixed(0.9F,1.3F)).build());
+                    .dimensions(EntityDimensions.fixed(0.8F,1.1F)).build());
 }
