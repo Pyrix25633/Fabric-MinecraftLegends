@@ -98,7 +98,7 @@ public class GrindstoneGolemEntity extends ModAbstractGolemEntity implements IAn
                 return ActionResult.PASS;
             } else {
                 float g = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
-                this.playSound(SoundEvents.BLOCK_WOOD_PLACE, 1.0F, g);
+                this.playSound(SoundEvents.BLOCK_STONE_PLACE, 1.0F, g);
                 if(!player.getAbilities().creativeMode) {
                     itemStack.decrement(1);
                 }
