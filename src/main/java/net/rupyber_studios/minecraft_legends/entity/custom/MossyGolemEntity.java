@@ -51,17 +51,17 @@ public class MossyGolemEntity extends ModAbstractGolemEntity implements IAnimata
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if(event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mossy_golem.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mossy_golem.walk"));
             return PlayState.CONTINUE;
         }
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mossy_golem.idle", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mossy_golem.idle"));
         return PlayState.CONTINUE;
     }
 
     private <E extends IAnimatable> PlayState attackPredicate(AnimationEvent<E> event) {
         if(this.isAttacking() && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
             event.getController().markNeedsReload();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mossy_golem.attack", false));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mossy_golem.attack"));
         }
         return PlayState.CONTINUE;
     }

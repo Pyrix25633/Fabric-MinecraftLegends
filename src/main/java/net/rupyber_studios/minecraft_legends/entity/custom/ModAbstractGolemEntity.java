@@ -14,12 +14,13 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.UUID;
 
 public abstract class ModAbstractGolemEntity extends GolemEntity implements Angerable, IAnimatable {
     protected static final UniformIntProvider ANGER_TIME_RANGE;
-    protected final AnimationFactory factory = new AnimationFactory(this);
+    protected final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private int angerTime;
     @Nullable
     private UUID angryAt;

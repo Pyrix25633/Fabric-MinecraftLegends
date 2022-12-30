@@ -28,8 +28,9 @@ public class GrindstoneGolemEntityModel extends AnimatedGeoModel<GrindstoneGolem
     }
 
     @Override
-    public void setLivingAnimations(GrindstoneGolemEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
-        super.setLivingAnimations(entity, uniqueID, customPredicate);
+    @SuppressWarnings("unchecked")
+    public void setCustomAnimations(GrindstoneGolemEntity entity, int uniqueID, AnimationEvent customPredicate) {
+        super.setCustomAnimations(entity, uniqueID, customPredicate);
         IBone body = this.getAnimationProcessor().getBone("body");
         IBone head = this.getAnimationProcessor().getBone("head");
 

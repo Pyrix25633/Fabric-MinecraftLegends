@@ -28,8 +28,9 @@ public class PlankGolemEntityModel extends AnimatedGeoModel<PlankGolemEntity> {
     }
 
     @Override
-    public void setLivingAnimations(PlankGolemEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
-        super.setLivingAnimations(entity, uniqueID, customPredicate);
+    @SuppressWarnings("unchecked")
+    public void setCustomAnimations(PlankGolemEntity entity, int uniqueID, AnimationEvent customPredicate) {
+        super.setCustomAnimations(entity, uniqueID, customPredicate);
         IBone body = this.getAnimationProcessor().getBone("body");
 
         EntityModelData extraData = (EntityModelData)customPredicate.getExtraDataOfType(EntityModelData.class).get(0);

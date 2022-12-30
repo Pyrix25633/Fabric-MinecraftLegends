@@ -71,17 +71,17 @@ public class PlankGolemEntity extends ModAbstractGolemEntity implements RangedAt
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if(event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.plank_golem.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.plank_golem.walk"));
             return PlayState.CONTINUE;
         }
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.plank_golem.idle", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.plank_golem.idle"));
         return PlayState.CONTINUE;
     }
 
     private <E extends IAnimatable> PlayState attackPredicate(AnimationEvent<E> event) {
         if(this.isAttacking() && event.getController().getAnimationState().equals(AnimationState.Stopped)) {
             event.getController().markNeedsReload();
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.plank_golem.attack", false));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.plank_golem.attack"));
         }
         return PlayState.CONTINUE;
     }

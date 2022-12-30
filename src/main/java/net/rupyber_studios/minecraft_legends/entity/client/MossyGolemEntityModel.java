@@ -28,8 +28,9 @@ public class MossyGolemEntityModel extends AnimatedGeoModel<MossyGolemEntity> {
     }
 
     @Override
-    public void setLivingAnimations(MossyGolemEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
-        super.setLivingAnimations(entity, uniqueID, customPredicate);
+    @SuppressWarnings("unchecked")
+    public void setCustomAnimations(MossyGolemEntity entity, int uniqueID, AnimationEvent customPredicate) {
+        super.setCustomAnimations(entity, uniqueID, customPredicate);
         IBone arms = this.getAnimationProcessor().getBone("arms");
         IBone head = this.getAnimationProcessor().getBone("head");
 
