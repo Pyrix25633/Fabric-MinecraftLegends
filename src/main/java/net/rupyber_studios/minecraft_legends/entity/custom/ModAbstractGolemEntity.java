@@ -38,9 +38,7 @@ public abstract class ModAbstractGolemEntity extends GolemEntity implements Ange
         this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.6));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.5F));
         this.goalSelector.add(8, new LookAroundGoal(this));
-        this.targetSelector.add(2, new RevengeGoal(this));
         this.targetSelector.add(3, new ActiveTargetGoal<>(this, MobEntity.class, 5, false, false, (entity) -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
-        this.targetSelector.add(4, new UniversalAngerGoal<>(this, false));
     }
 
     @Override
