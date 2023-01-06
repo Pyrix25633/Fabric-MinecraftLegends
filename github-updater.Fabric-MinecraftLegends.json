@@ -1,7 +1,15 @@
 {
-  "latest": "0.1.0",
+  "latest": "0.2.1",
   "keep": [],
   "releases": [
+    {
+      "tag": "0.2.1",
+      "cross": "minecraft_legends-1.19.2-0.2.1.jar"
+    },
+    {
+      "tag": "0.2.0",
+      "cross": "minecraft_legends-1.19.2-0.2.0.jar"
+    },
     {
       "tag": "0.1.0",
       "cross": "minecraft_legends-1.19.2-0.1.0.jar"
